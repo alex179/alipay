@@ -10,8 +10,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"github.com/smartwalle/ngx"
-	"github.com/smartwalle/nsign"
+	"github.com/alex179/ngx"
+	"github.com/alex179/nsign"
 	"io"
 	"net/http"
 	"net/url"
@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/smartwalle/ncrypto"
+	"github.com/alex179/ncrypto"
 )
 
 var (
