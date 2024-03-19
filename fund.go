@@ -69,3 +69,9 @@ func (c *Client) FundAccountQuery(param FundAccountQuery) (result *FundAccountQu
 func (c *Client) FundTransAppPay(param FundTransAppPay) (result string, err error) {
 	return c.EncodeParam(param)
 }
+
+// FundBatchCreate 批量付款到户有密-批次下单接口 https://opendocs.alipay.com/pre-open/02bd04?pathHash=4345ba1a
+func (c *Client) FundBatchCreate(parms FundBatchCreate) (result *FundBatchCreateRsp, err error) {
+	err = c.doRequest("POST", parms, &result)
+	return result, err
+}
