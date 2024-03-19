@@ -449,3 +449,47 @@ func (f FundTransAppPay) Params() map[string]string {
 	m["app_auth_token"] = f.AppAuthToken
 	return m
 }
+
+// alipay.fund.batch.create(批次下单接口)
+// https://opendocs.alipay.com/pre-open/02bd04?pathHash=4345ba1a
+type FundBatchCreateRsp struct {
+	Error
+	OutBatchNo   string `json:"out_batch_no"`   // 商户的批次号
+	BatchTransID string `json:"batch_trans_id"` // 支付宝内部的批次ID
+	Status       string `json:"status"`         // 批次落单成功
+}
+
+type FundBatchCreate struct {
+	AuxParam
+	AppAuthToken     string            `json:"-"`
+	OutBatchNo       string            `json:"out_batch_no"`       // 必选 商户的批次号
+	ProductCode      string            `json:"product_code"`       // 必选 业务产品码。不同产品值不同，具体值联系支付宝确认。如：批量转账到支付宝账户 场景固定为 BATCH_API_TO_ACC。
+	BizScene         string            `json:"biz_scene"`          // 必选 业务场景。不同场景值不同，具体值联系支付宝确认。如：批量转账到支付宝账户 场景固定为 MESSAGE_BATCH_PAY
+	OrderTitle       string            `json:"order_title"`        // 必选 转账标题，用于收银台展示标题
+	TotalTransAmount float64           `json:"total_trans_amount"` // 必选 批次总金额，单位为元，精确到小数点后两位，取值范围[1.00,9999999999999.99]
+	TotalCount       string            `json:"total_count"`        // 必选 批次总笔数
+	TransOrderList   []*TransOrderList `json:"trans_order_list"`   // 必选 收款信息列表。实际集合可以添加多个收款方信息，最多可以添加1000个收款方信息，如方案接入文档有特别说明，优先以接入文档为准
+	PayerInfo        *PayeeInfo        `json:"payer_info"`         // 可选 付款方信息
+	TimeExpire       string            `json:"time_expire"`        // 可选 绝对超时时间，格式为yyyy-MM-dd HH:mm。
+	Remark           string            `json:"remark"`             // 可选 转账备注
+}
+
+type TransOrderList struct {
+	OutBizNo       string     `json:"out_biz_no"`      // 必选 商户订单号
+	TransAmount    string     `json:"trans_amount"`    // 必选 转账金额
+	OrderTitle     string     `json:"order_title"`     // 可选 转账订单的标题，用于在收银台和消费记录展示
+	Remark         string     `json:"remark"`          // 可选 转账备注，收、付款方均可见，收款方如果是支付宝账号，会展示在收款方账单里。
+	BusinessParams string     `json:"business_params"` // 可选 JSON格式，传递业务扩展参数，具体业务参数取值请以接入文档示例为准！ sub_biz_scene: 子业务场景，取值：BAOXIAO\TRANSFER\... withdraw_timeliness:到卡申请到账时效， T0：当日到账 T1：次日到账，如果未设置或者值为空默认T0 【示例值】{"sub_biz_scene":"BAOXIAO","withdraw_timeliness":"T0"}
+	PassbackParams string     `json:"passback_params"` // 可选 JSON格式，传递业务扩展参数，使用前请与支付宝工程师联系！
+	PayeeInfo      *PayeeInfo `json:"payee_info"`      // 必选 收款方信息
+}
+
+func (f FundBatchCreate) APIName() string {
+	return "alipay.fund.batch.create"
+}
+
+func (f FundBatchCreate) Params() map[string]string {
+	var m = make(map[string]string)
+	m["app_auth_token"] = f.AppAuthToken
+	return m
+}
